@@ -44,10 +44,10 @@ module.exports = function(options) {
   const maxHeaderWidth = getFromOptionsOrDefaults('maxHeaderWidth');
 
   const branchName = branch.sync() || '';
-  const jiraIssueRegex = /(?<jiraIssue>(?<!([A-Z0-9]{1,10})-?)[A-Z0-9]+-\d+)/;
-  const matchResult = branchName.match(jiraIssueRegex);
-  const jiraIssue =
-    matchResult && matchResult.groups && matchResult.groups.jiraIssue;
+  const redmineIssueRegex = /(?<redmineIssue>[0-9]\d+)/;
+  const matchResult = branchName.match(redmineIssueRegex);
+  const redmineIssue =
+    matchResult && matchResult.groups && matchResult.groups.redmineIssue;
   const hasScopes =
     options.scopes &&
     Array.isArray(options.scopes) &&
@@ -85,18 +85,16 @@ module.exports = function(options) {
         },
         {
           type: 'input',
-          name: 'jira',
+          name: 'redmine',
           message:
-            'Enter REDMINE issue (' +
-            getFromOptionsOrDefaults('jiraPrefix') +
-            '-12345):',
-          when: options.jiraMode,
-          default: jiraIssue || '',
-          validate: function(jira) {
-            return /^(?<!([A-Z0-9]{1,10})-?)[A-Z0-9]+-\d+$/.test(jira);
+            'Enter REDMINE issue (12345):',
+          when: !options.redmineMode,
+          default: redmineIssue || '',
+          validate: function(redmine) {
+            return /^[0-9]*$/.test(redmine);
           },
-          filter: function(jira) {
-            return jira.toUpperCase();
+          filter: function(redmine) {
+            return redmine.toUpperCase();
           }
         },
         {
@@ -121,14 +119,14 @@ module.exports = function(options) {
           default: options.defaultSubject,
           maxLength: maxHeaderWidth,
           leadingLabel: answers => {
-            const jira = answers.jira ? ` ${answers.jira}` : '';
+            const redmine = answers.redmine ? ` ${answers.redmine}` : '';
             let scope = '';
 
             if (answers.scope && answers.scope !== 'none') {
               scope = `(${answers.scope})`;
             }
 
-            return `${answers.type}${scope}:${jira}`;
+            return `${answers.type}${scope}:${redmine}`;
           },
           validate: input =>
             input.length >= minHeaderWidth ||
@@ -148,7 +146,8 @@ module.exports = function(options) {
           type: 'confirm',
           name: 'isBreaking',
           message: 'Are there any breaking changes?',
-          default: false
+          default: false,
+          when: !options.redmineMode
         },
         {
           type: 'input',
@@ -164,7 +163,6 @@ module.exports = function(options) {
           name: 'isIssueAffected',
           message: 'Does this change affect any open issues?',
           default: options.defaultIssues ? true : false,
-          when: !options.jiraMode
         },
         {
           type: 'input',
@@ -198,10 +196,10 @@ module.exports = function(options) {
 
         // parentheses are only needed when a scope is present
         var scope = answers.scope ? '(' + answers.scope + ')' : '';
-        var jira = answers.jira ? answers.jira + ' ' : '';
+        var redmine = answers.redmine ? answers.redmine + ' ' : '';
 
         // Hard limit this line in the validate
-        const head = answers.type + scope + ': ' + jira + answers.subject;
+        const head = answers.type + scope + ': ' + redmine + answers.subject;
 
         // Wrap these lines at options.maxLineWidth characters
         var body = answers.body ? wrap(answers.body, wrapOptions) : false;
