@@ -87,7 +87,7 @@ module.exports = function(options) {
           type: 'input',
           name: 'jira',
           message:
-            'Enter JIRA issue (' +
+            'Enter REDMINE issue (' +
             getFromOptionsOrDefaults('jiraPrefix') +
             '-12345):',
           when: options.jiraMode,
