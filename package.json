@@ -1,6 +1,6 @@
 {
-  "name": "@digitalroute/cz-conventional-changelog-for-jira",
-  "version": "0.0.0-semantically-released",
+  "name": "@leethais91/cz-conventional-changelog-for-redmine",
+  "version": "0.0.0",
   "description": "Commitizen adapter following the conventional-changelog format and also asking for JIRA issue.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "homepage": "https://github.com/digitalroute/cz-conventional-changelog-for-jira",
   "repository": {
     "type": "git",
-    "url": "https://github.com/digitalroute/cz-conventional-changelog-for-jira.git"
+    "url": "git+https://github.com/digitalroute/cz-conventional-changelog-for-jira.git"
   },
   "engineStrict": true,
   "engines": {
@@ -27,7 +27,8 @@
     "lodash.map": "^4.5.1",
     "longest": "^2.0.1",
     "right-pad": "^1.0.1",
-    "word-wrap": "^1.0.3"
+    "word-wrap": "^1.0.3",
+    "@commitlint/load": ">6.1.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -53,5 +54,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/digitalroute/cz-conventional-changelog-for-jira/issues"
   }
 }
